@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <link rel="stylesheet" href="test.css">
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <!-- 追加 ここから -->
+    <py-env>
+      - pandas
+      - matplotlib
+    </py-env>
+  </head>
+
+  <body>
+
+    <div id="drop-zone" style="border: 1px solid; padding: 30px;">
+      <p>ファイルをドラッグ＆ドロップもしくは</p>
+      <input type="file" name="file" id="file-input">
+  </div>
+
+  <div id="data"></div>
+  <div id="col"></div>
+
+  
+  <py-button id="create_graph" label="グラフ生成"></py-button>
+<select id="col1"></select>
+<select id="col2"></select>
+
+  <h2>生成グラフ</h2>
+  <div id="graph_view"></div>
+
+  <py-script>
+import pandas as pd
+import matplotlib.pyplot as plt
+import io
+
+def setData(*ags, **kwgs):
+  df = pd.read_csv(io.StringIO(Element('data').element.innerText))
+  x=df[Element('col1').element.value]
+  y=df[Element('col2').element.value]
+  fig = plt.figure()
+  ax = fig.add_subplot(1,1,1)
+  ax.scatter(x,y)
+  ax.set_title('first scatter plot')
+  ax.set_xlabel('x')
+  ax.set_ylabel('y')
+  pyscript.write('graph_view', fig)
+
+import_button = Element('create_graph')
+import_button.element.onclick = setData
+    </py-script>
+    <script src="test.js"></script>
+  </body>
+
+</html>
